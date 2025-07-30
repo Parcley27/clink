@@ -56,6 +56,7 @@ struct ReceiptView: View {
                                         Text("=")
                                         
                                         Text(formatter.string(from: NSNumber(value: Double(item.count) * item.value)) ?? "")
+                                            .bold()
                                         
                                     }
                                     
