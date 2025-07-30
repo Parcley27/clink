@@ -10,28 +10,8 @@ import SwiftUI
 struct ReceiptView: View {
     @Binding var drawer: [Denomination]
     @Binding var selectedDetent: PresentationDetent
+    
     let formatter: NumberFormatter
-    
-    var total: Double {
-        drawer.reduce(0) { $0 + Double($1.count) * $1.value }
-        
-    }
-    
-    var billsTotal: Double {
-        drawer.filter { $0.moneyType == "bill" }.reduce(0) { $0 + Double($1.count) * $1.value }
-        
-    }
-    
-    
-    var coinsTotal: Double {
-        drawer.filter { $0.moneyType == "coin" }.reduce(0) { $0 + Double($1.count) * $1.value }
-        
-    }
-    
-    var rollsTotal: Double {
-        drawer.filter { $0.moneyType == "roll" }.reduce(0) { $0 + Double($1.count) * $1.value }
-        
-    }
     
     var body: some View {
         GeometryReader { geo in
@@ -58,7 +38,7 @@ struct ReceiptView: View {
                             ForEach(drawer.filter { $0.count > 0 }) { item in
                                 VStack {
                                     HStack {
-                                        Text(item.name.capitalized)
+                                        Text(item.name)
                                             .font(.headline)
                                         
                                         RoundedRectangle(cornerRadius: 1)
@@ -105,7 +85,7 @@ struct ReceiptView: View {
                     Spacer()
                     
                     VStack {
-                        Text("Total: \(formatter.string(from: total as NSNumber) ?? "$0.00")")
+                        Text("Total: \(formatter.string(from: drawer.total as NSNumber) ?? "$0.00")")
                             .font(.title)
                             .padding(.vertical, 4)
                             .padding(.top, 16)
@@ -113,7 +93,7 @@ struct ReceiptView: View {
                         
                         HStack(spacing: 32) {
                             VStack {
-                                Text("\(formatter.string(from: billsTotal as NSNumber) ?? "$0.00")")
+                                Text("\(formatter.string(from: drawer.billsTotal as NSNumber) ?? "$0.00")")
                                     .font(.headline)
                                 
                                 Divider()
@@ -123,7 +103,7 @@ struct ReceiptView: View {
                             }
                             
                             VStack {
-                                Text("\(formatter.string(from: coinsTotal as NSNumber) ?? "$0.00")")
+                                Text("\(formatter.string(from: drawer.coinsTotal as NSNumber) ?? "$0.00")")
                                     .font(.headline)
                                 
                                 Divider()
@@ -133,7 +113,7 @@ struct ReceiptView: View {
                             }
                             
                             VStack {
-                                Text("\(formatter.string(from: rollsTotal as NSNumber) ?? "$0.00")")
+                                Text("\(formatter.string(from: drawer.rollsTotal as NSNumber) ?? "$0.00")")
                                     .font(.headline)
                                 
                                 Divider()
@@ -159,9 +139,7 @@ struct ReceiptView: View {
     
     
 #Preview {
-    @Previewable @State var demoDrawer: [Denomination] = [
-        
-    ]
+    @Previewable @State var demoDrawer: [Denomination] = Denomination.createDrawer()
     
     @Previewable @State var detent: PresentationDetent = PresentationDetent.fraction(0.18)
 //    let selectedDetent = PresentationDetent.medium
